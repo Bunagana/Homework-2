@@ -51,6 +51,7 @@ contract BettingContract {
 	/* Owner chooses their trusted Oracle */
 	function chooseOracle(address _oracle) OwnerOnly() returns (address) {
 	    oracle = _oracle;
+		return oracle;
 	}
 
 	/* Gamblers place their bets, preferably after calling checkOutcomes */
@@ -61,20 +62,21 @@ contract BettingContract {
 			gamblerA = msg.sender;
 			bets[gamblerA].outcome = _outcome;
 			bets[gamblerA].amount = msg.value;
+			bets[gamblerA].initialized = true;
 			BetMade(gamblerA);
 			}
 		if (numberBet == 1) {
 			gamblerB = msg.sender;
 			bets[gamblerB].outcome = _outcome;
 			bets[gamblerB].amount = msg.value;
+			bets[gamblerB].initialized = true;
 			BetMade(gamblerB);
 		}
 		numberBet += 1;
 		if (numberBet == 2) {
 			BetClosed();
 		}
-
-
+		return bets[msg.sender].initialized;
 	}
 
 	/* The oracle chooses which outcome wins */
